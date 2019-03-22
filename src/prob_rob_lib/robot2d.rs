@@ -1,5 +1,5 @@
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct State2d {
     pub x: f64,
     pub y: f64,
@@ -20,4 +20,20 @@ impl Control {
             theta: cur.theta + self.w,
         }
     }
+}
+
+pub fn calc_in_time(
+    initial_state: &State2d,
+    cntl: &Control,
+    num: usize
+) -> (Vec<f64>, Vec<f64>) {
+    let mut x = vec![0.0; num];
+    let mut y = vec![0.0; num];
+    let mut current = initial_state.clone();
+    for i in 0..num {
+        x[i] = current.x;
+        y[i] = current.y;
+        current = cntl.transit(&current);
+    }
+    (x, y)
 }

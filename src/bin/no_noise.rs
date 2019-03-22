@@ -7,14 +7,7 @@ fn main() {
     let cntl = Control { v: 0.1, w: deg_to_rad(10.0) };
 
     let num = 30;
-    let mut x = vec![0.0; num];
-    let mut y = vec![0.0; num];
-    for i in 0..num {
-        x[i] = current.x;
-        y[i] = current.y;
-        //println!("{:?}", current);
-        current = cntl.transit(&current);
-    }
+    let (x, y) = calc_in_time(&mut current, &cntl, num);
 
     let mut fg = Figure::new();
     fg.axes2d()
@@ -23,7 +16,6 @@ fn main() {
         .set_y_range(Fix(-0.5), Fix(1.5))
         .lines_points(
         &x, &y, 
-        &[Caption("robot"), Color("red"), PointSymbol('s'), PointSize(2.0)])
-		;
+        &[Caption("robot"), Color("red"), PointSymbol('s'), PointSize(2.0)]);
     fg.show();
 }
