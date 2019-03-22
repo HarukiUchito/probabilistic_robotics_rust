@@ -1,0 +1,8 @@
+[package]
+name = "probabilistic_robotics"
+version = "0.1.0"
+authors = ["Haruki Uchiito <uhcahriuiktio0114@outlook.com>"]
+edition = "2018"
+
+[dependencies]
+gnuplot = "*"
