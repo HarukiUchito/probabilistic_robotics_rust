@@ -11,8 +11,13 @@ pub struct Control {
     pub w: f64, // The angular velocity
 }
 
-pub fn transit(cur: &mut State2d, cnt: &Control) {
-    cur.x += cnt.v * cur.theta.cos();
-    cur.y += cnt.v * cur.theta.sin();
-    cur.theta += cnt.w;
+impl Control {
+    /// The transition of one sec
+    pub fn transit(&self, cur: &State2d) -> State2d {
+        State2d {
+            x: cur.x + self.v * cur.theta.cos(),
+            y: cur.y + self.v * cur.theta.sin(),
+            theta: cur.theta + self.w,
+        }
+    }
 }

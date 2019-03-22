@@ -13,7 +13,7 @@ fn main() {
         x[i] = current.x;
         y[i] = current.y;
         //println!("{:?}", current);
-        transit(&mut current, &cntl);
+        current = cntl.transit(&current);
     }
 
     let mut fg = Figure::new();

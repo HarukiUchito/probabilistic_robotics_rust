@@ -13,7 +13,7 @@ fn main() {
         x[i] = current.x;
         y[i] = current.y;
         //println!("{:?}", current);
-        transit(&mut current, &cntl);
+        current = cntl.transit(&current);
     }
 
     let mut fg = Figure::new();
@@ -23,7 +23,7 @@ fn main() {
         .set_y_range(Fix(-0.5), Fix(1.5))
         .lines_points(
         &x, &y, 
-        &[Caption("robot"), Color("green"), PointSymbol('s'), PointSize(2.0)])
+        &[Caption("robot"), Color("red"), PointSymbol('s'), PointSize(2.0)])
 		;
     fg.show();
 }
