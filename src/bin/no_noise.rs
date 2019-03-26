@@ -7,7 +7,8 @@ fn main() {
     let cntl = Control { v: 0.1, w: deg_to_rad(10.0) };
 
     let num = 30;
-    let (x, y) = calc_in_time(&mut current, &cntl, num);
+    let noisy = false;
+    let (x, y) = calc_in_time(&mut current, &cntl, num, noisy);
 
     let mut fg = Figure::new();
     fg.axes2d()
