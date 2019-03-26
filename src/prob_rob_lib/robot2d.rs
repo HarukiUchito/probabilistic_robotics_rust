@@ -25,7 +25,7 @@ impl Control {
             dir_err = nd.sample(&mut rand::thread_rng());
             let nd = Normal::new(w, w / 10.0);
             w = nd.sample(&mut rand::thread_rng());
-            println!("{:?}, {:?}, {:?}", v, dir_err, w);
+            //println!("{:?}, {:?}, {:?}", v, dir_err, w);
         }
         State2d {
             x: cur.x + v * (cur.theta + dir_err).cos(),
