@@ -41,13 +41,21 @@ impl Control {
     }
 }
 
+pub struct Robot2d {
+    
+}
+
 pub fn draw_animation(initial_state: State2d, cntl: Control, end_time: f64, noisy: bool) {
     let (mut x, mut y): (Vec<f64>, Vec<f64>) = (vec![], vec![]);
     let mut current = initial_state;
 
     let mut fg = Figure::new();
+    fg.set_terminal("gif animate optimize delay 2 size 480,360", "movie/movie.gif");
     let (mut t, dt) = (0.0, 0.1);
     while t <= end_time {
+        if true {
+            fg.new_page();
+        }
         current = cntl.transit(&current, &mut t, dt, noisy);
         x.push(current.x);
         y.push(current.y);
@@ -55,7 +63,7 @@ pub fn draw_animation(initial_state: State2d, cntl: Control, end_time: f64, nois
             x.remove(0);
             y.remove(0);
         }
-        fg.clear_axes();
+        //fg.clear_axes();
         fg.axes2d()
             .set_title(
                 &format!(
@@ -83,7 +91,9 @@ pub fn draw_animation(initial_state: State2d, cntl: Control, end_time: f64, nois
             .set_x_grid(true)
             .set_y_grid(true)
             .set_grid_options(false, &[Color("black"), LineStyle(DashType::SmallDot)]);
-        fg.show();
+        //fg.show();
         sleep(Duration::from_millis((1000.0 * dt) as u64));
     }
+//    fg.echo_to_file("movie.gif.gnuplot");
+	fg.show();
 }

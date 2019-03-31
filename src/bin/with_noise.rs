@@ -11,7 +11,7 @@ fn main() {
         v: 0.1,
         w: deg_to_rad(10.0),
     };
-    let end_time = 30.0;
+    let end_time = 5.0;
     let noisy = true;
 
     draw_animation(initial_state, cntl, end_time, noisy);
