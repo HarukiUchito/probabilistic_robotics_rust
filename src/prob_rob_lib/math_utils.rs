@@ -3,14 +3,14 @@ use std::ops::*;
 
 pub const PI: f64 = f64::consts::PI;
 
-#[inline]
-pub fn deg_to_rad(deg: f64) -> f64 {
-    deg * PI / 180.0
+#[macro_export]
+macro_rules! deg2rad {
+    ($deg:expr) => ($deg * PI / 180.0);
 }
 
-#[inline]
-pub fn rad_to_deg(rad: f64) -> f64 {
-    rad * 180.0 / PI
+#[macro_export]
+macro_rules! rad2deg {
+    ($rad:expr) => ($rad * 180.0 / PI);
 }
 
 #[inline]
