@@ -5,5 +5,5 @@ authors = ["Haruki Uchiito <uhcahriuiktio0114@outlook.com>"]
 edition = "2018"
 
 [dependencies]
-gnuplot = "*"
+gnuplot = "0.0.30"
 rand = "0.6"

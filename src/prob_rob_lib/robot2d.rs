@@ -27,7 +27,7 @@ impl Control {
             // add noise of each control
             let nd = Normal::new(v, v / 10.0);
             v = nd.sample(&mut rand::thread_rng());
-            let nd = Normal::new(0.0, deg_to_rad(3.0));
+            let nd = Normal::new(0.0, deg2rad!(3.0));
             dir_err = nd.sample(&mut rand::thread_rng());
             let nd = Normal::new(w, w / 10.0);
             w = nd.sample(&mut rand::thread_rng());
@@ -41,13 +41,32 @@ impl Control {
     }
 }
 
-pub fn draw_animation(initial_state: State2d, cntl: Control, end_time: f64, noisy: bool) {
+pub struct Robot2d {
+    
+}
+
+pub fn draw_animation(
+    initial_state: State2d,
+    cntl: Control,
+    end_time: f64,
+    noisy: bool,
+    create_gif: bool,
+    name: &str,
+) {
     let (mut x, mut y): (Vec<f64>, Vec<f64>) = (vec![], vec![]);
     let mut current = initial_state;
 
     let mut fg = Figure::new();
+    if create_gif {
+        fg.set_terminal("gif animate optimize delay 2 size 480,360", &("movie/".to_owned() + name + ".gif"));
+    }
     let (mut t, dt) = (0.0, 0.1);
     while t <= end_time {
+        if create_gif {
+            fg.new_page();
+        } else {
+            fg.clear_axes();
+        }
         current = cntl.transit(&current, &mut t, dt, noisy);
         x.push(current.x);
         y.push(current.y);
@@ -55,13 +74,12 @@ pub fn draw_animation(initial_state: State2d, cntl: Control, end_time: f64, nois
             x.remove(0);
             y.remove(0);
         }
-        fg.clear_axes();
         fg.axes2d()
             .set_title(
                 &format!(
                     "Control: v = {:?}[m/s], w = {:?}[deg], time {:.*}[s]",
                     cntl.v,
-                    rad_to_deg(cntl.w),
+                    rad2deg!(cntl.w),
                     2,
                     t
                 ),
@@ -83,7 +101,12 @@ pub fn draw_animation(initial_state: State2d, cntl: Control, end_time: f64, nois
             .set_x_grid(true)
             .set_y_grid(true)
             .set_grid_options(false, &[Color("black"), LineStyle(DashType::SmallDot)]);
-        fg.show();
+        if !create_gif {
+            fg.show();
+        }
         sleep(Duration::from_millis((1000.0 * dt) as u64));
+    }
+	if create_gif {
+        fg.show();
     }
 }
