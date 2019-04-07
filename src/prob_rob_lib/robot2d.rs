@@ -42,7 +42,14 @@ impl Control {
 }
 
 pub struct Robot2d {
-    
+    pub control: Control,
+    pub state: State2d,
+}
+
+impl Robot2d {
+    pub fn process(&mut self, t: &mut f64, dt: f64) {
+        self.state = self.control.transit(&self.state, t, dt, true);
+    }
 }
 
 pub fn draw_arrow(
@@ -97,7 +104,7 @@ pub fn draw_animation(
         let mut ax2d = fg.axes2d();
         ax2d.set_title(
                 &format!(
-                    "Control: v = {:?}[m/s], w = {:?}[deg], time {:.*}[s]",
+                    "Control: v = {:?}[m/s], w = {:?}[deg], Time {:.*}[s]",
                     cntl.v,
                     rad2deg!(cntl.w),
                     2,
