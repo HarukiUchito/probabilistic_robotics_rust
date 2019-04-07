@@ -45,6 +45,32 @@ pub struct Robot2d {
     
 }
 
+pub fn draw_arrow(
+    ax2d: &mut Axes2D,
+    state2d: &State2d,
+    length: f64,
+    color: PlotOption<&str>,
+) {
+    let (x, y, th) = (state2d.x, state2d.y, state2d.theta);
+    ax2d.arrow(
+            Axis(x),
+            Axis(y),
+            Axis(x + length * th.cos()),
+            Axis(y + length * th.sin()),
+            &[ArrowType(Open), ArrowSize(0.1), Caption("arrow"), LineWidth(2.0), color],
+        )
+        .points(
+            &[x],
+            &[y],
+            &[
+                Caption("robot"),
+                color,
+                PointSymbol('O'),
+                PointSize(0.5),
+            ],
+        );
+}
+
 pub fn draw_animation(
     initial_state: State2d,
     cntl: Control,
@@ -53,7 +79,6 @@ pub fn draw_animation(
     create_gif: bool,
     name: &str,
 ) {
-    let (mut x, mut y): (Vec<f64>, Vec<f64>) = (vec![], vec![]);
     let mut current = initial_state;
 
     let mut fg = Figure::new();
@@ -68,14 +93,9 @@ pub fn draw_animation(
             fg.clear_axes();
         }
         current = cntl.transit(&current, &mut t, dt, noisy);
-        x.push(current.x);
-        y.push(current.y);
-        if x.len() > 10 {
-            x.remove(0);
-            y.remove(0);
-        }
-        fg.axes2d()
-            .set_title(
+        
+        let mut ax2d = fg.axes2d();
+        ax2d.set_title(
                 &format!(
                     "Control: v = {:?}[m/s], w = {:?}[deg], time {:.*}[s]",
                     cntl.v,
@@ -83,24 +103,16 @@ pub fn draw_animation(
                     2,
                     t
                 ),
-                &[],
-            )
+                &[],)
             .set_aspect_ratio(Fix(1.0))
             .set_x_range(Fix(-1.0), Fix(1.0))
             .set_y_range(Fix(-0.5), Fix(1.5))
-            .lines_points(
-                &x,
-                &y,
-                &[
-                    Caption("robot"),
-                    Color("red"),
-                    PointSymbol('s'),
-                    PointSize(1.0),
-                ],
-            )
+            .points(&[-1.0, -1.0, 1.0, 1.0], &[-0.5, 1.5, -0.5, 1.5], &[Color("black")])
             .set_x_grid(true)
             .set_y_grid(true)
-            .set_grid_options(false, &[Color("black"), LineStyle(DashType::SmallDot)]);
+            .set_grid_options(false, &[Color("black"), LineStyle(DashType::SmallDot)])
+            ;
+        draw_arrow(ax2d, &current, 0.125, Color("black"));
         if !create_gif {
             fg.show();
         }
