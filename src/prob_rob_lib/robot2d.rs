@@ -19,7 +19,7 @@ pub struct Control {
 
 impl Control {
     /// The transition of one sec
-    pub fn transit(&self, cur: &State2d, t: &mut f64, dt: f64, noisy: bool) -> State2d {
+    pub fn process(&self, cur: &State2d, t: &mut f64, dt: f64, noisy: bool) -> State2d {
         *t += dt;
         let (mut v, mut w) = (self.v, self.w);
         let mut dir_err = 0.0; // The error of direction for moving forward
@@ -48,7 +48,7 @@ pub struct Robot2d {
 
 impl Robot2d {
     pub fn process(&mut self, t: &mut f64, dt: f64) {
-        self.state = self.control.transit(&self.state, t, dt, true);
+        self.state = self.control.process(&self.state, t, dt, true);
     }
 }
 
@@ -99,7 +99,7 @@ pub fn draw_animation(
         } else {
             fg.clear_axes();
         }
-        current = cntl.transit(&current, &mut t, dt, noisy);
+        current = cntl.process(&current, &mut t, dt, noisy);
         
         let mut ax2d = fg.axes2d();
         ax2d.set_title(
