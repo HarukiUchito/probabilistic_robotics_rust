@@ -5,8 +5,6 @@ Test GIF
 cargo test // generates gif animations
 ```
 
-#### no-noise
-![no_noise](movie/no_noise.gif)
+#### dead-reckoning
+![dead-reckoning](movie/dead_reckoning.gif)
 
-#### with-noise
-![with_noise](movie/with_noise.gif)
