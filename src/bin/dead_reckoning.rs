@@ -14,18 +14,17 @@ const CNTL: Control = Control {
     w: deg2rad!(10.0),
 };
 const END_TIME: f64 = 30.0;
-const NOISY: bool = false;
-const NAME: &str = "no_noise";
+const NAME: &str = "dead_reckoning";
 
 fn main() {
     let create_gif = false;
-
-    draw_animation(INITIAL_STATE, CNTL, END_TIME, NOISY, create_gif, NAME);
+    let mut rb = Robot2d::new(INITIAL_STATE, CNTL);
+    draw_robot_animation(&mut rb, END_TIME, create_gif, NAME);
 }
 
 #[test]
 fn no_noise_test() {
     let create_gif = true;
-
-    draw_animation(INITIAL_STATE, CNTL, END_TIME, NOISY, create_gif, NAME);
+    let mut rb = Robot2d::new(INITIAL_STATE, CNTL);
+    draw_robot_animation(&mut rb, END_TIME, create_gif, NAME);
 }
