@@ -63,8 +63,8 @@ impl Robot2d {
     }
 
     pub fn draw(&mut self, ax2d: &mut Axes2D) {
-        draw_arrow(ax2d, &self.truth, Color("red"));
-        draw_arrow(ax2d, &self.guess, Color("black"));
+        draw_arrow(ax2d, &self.truth, Color("red"), Caption("Truth"));
+        draw_arrow(ax2d, &self.guess, Color("black"), Caption("Guess"));
     }
 }
 
@@ -72,6 +72,7 @@ pub fn draw_arrow(
     ax2d: &mut Axes2D,
     state2d: &State2d,
     color: PlotOption<&str>,
+    caption: PlotOption<&str>,
 ) {
     let (x, y, th) = (state2d.x, state2d.y, state2d.theta);
     let length = 0.125;
@@ -80,13 +81,13 @@ pub fn draw_arrow(
             Axis(y),
             Axis(x + length * th.cos()),
             Axis(y + length * th.sin()),
-            &[ArrowType(Open), ArrowSize(0.1), Caption("arrow"), LineWidth(2.0), color],
+            &[ArrowType(Open), ArrowSize(0.1), LineWidth(2.0), color],
         )
         .points(
             &[x],
             &[y],
             &[
-                Caption("robot"),
+                caption,
                 color,
                 PointSymbol('O'),
                 PointSize(0.5),
