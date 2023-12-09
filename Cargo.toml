@@ -6,4 +6,6 @@ edition = "2018"
 
 [dependencies]
 gnuplot = "0.0.30"
-rand = "0.6"
+rand = "*"
+rand_distr = "*"
+h_analyzer_client_lib = { git = "https://github.com/HarukiUchito/h_analyzer_client_lib.git" }
