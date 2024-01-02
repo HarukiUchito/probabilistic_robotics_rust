@@ -15,29 +15,43 @@ const CNTL: Control = Control {
 };
 const END_TIME: f64 = 30.0;
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let mut robot = Robot2d::new(INITIAL_STATE, CNTL);
     let (mut t, dt) = (0.0, 0.1);
-    let mut cl = h_analyzer_client_lib::HAnalyzerClient::new();
-    let name = "guess".to_string();
-    let truth = "truth".to_string();
+    let mut cl = h_analyzer_client_lib::HAnalyzerClient::new().await;
+    cl.register_new_world(&"prob_rob".to_string())
+        .await
+        .unwrap();
 
-    cl.connect_to_series(&name).unwrap();
-    cl.connect_to_series(&truth);
-
-    cl.clear_series(&name);
-    cl.clear_series(&truth);
-
+    let mut index = 0;
     while t <= END_TIME {
         robot.process(&mut t, dt);
-        println!("{:?}", robot.guess);
-
-        cl.send_point(&name, robot.guess.x, robot.guess.y).unwrap();
-        cl.send_point(&truth, robot.truth.x, robot.truth.y).unwrap();
-
+        //println!("{:?}", robot.guess);
         // robot.draw(&mut ax2d);
         std::thread::sleep(std::time::Duration::from_millis((1000.0 * dt) as u64));
-    }
 
-    cl.runtime.shutdown_background();
+        let mut wf = h_analyzer_data::WorldFrame::new(index, t);
+        let mut ego = h_analyzer_data::Entity::new();
+        ego.add_estimate(
+            "odom".to_string(),
+            h_analyzer_data::Estimate::Pose2D(h_analyzer_data::Pose2D::new(
+                robot.guess.x,
+                robot.guess.y,
+                robot.guess.theta,
+            )),
+        );
+        ego.add_estimate(
+            "truth".to_string(),
+            h_analyzer_data::Estimate::Pose2D(h_analyzer_data::Pose2D::new(
+                robot.truth.x,
+                robot.truth.y,
+                robot.truth.theta,
+            )),
+        );
+        wf.add_entity("ego".to_string(), ego);
+        cl.send_world_frame(wf).await.unwrap();
+
+        index += 1;
+    }
 }
